@@ -11,7 +11,7 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-func bond(w http.ResponseWriter, r *http.Request) {
+func Bond(w http.ResponseWriter, r *http.Request) {
 	request := httpc.NewRequest(httpc.NewClient())
 	request.SetMethod("GET").SetURL("https://datacenter-web.eastmoney.com/api/data/v1/get")
 	request.SetQuery("source", "WEB")
