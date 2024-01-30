@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"net/http"
+	"fmt"
 	"os"
 	"strings"
 	"time"
@@ -11,7 +11,7 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-func Bond(w http.ResponseWriter, r *http.Request) {
+func RunBond() {
 	request := httpc.NewRequest(httpc.NewClient())
 	request.SetMethod("GET").SetURL("https://datacenter-web.eastmoney.com/api/data/v1/get")
 	request.SetQuery("source", "WEB")
@@ -25,7 +25,7 @@ func Bond(w http.ResponseWriter, r *http.Request) {
 	request.Send()
 	_, res, err := request.End()
 	if err != nil || !gjson.ValidBytes(res) {
-		w.Write([]byte("获取数据失败"))
+		fmt.Println("获取数据失败")
 	}
 
 	result := gjson.ParseBytes(res)
@@ -72,5 +72,5 @@ func Bond(w http.ResponseWriter, r *http.Request) {
 	message.WriteString("\n")
 	message.WriteString(listing)
 	n.Send("新债", message.String())
-	w.Write([]byte(message.String()))
+	fmt.Println("获取数据失败")
 }
