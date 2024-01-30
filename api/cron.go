@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 
+	"github.com/dzlzh/go-vercel/job"
 	"github.com/golang-module/carbon/v2"
 )
 
@@ -16,8 +17,12 @@ func init() {
 }
 
 func Cron(w http.ResponseWriter, r *http.Request) {
-	RunBond()
-	RunBirthday()
+	bond := new(job.Bond)
+	bond.Run()
+
+	reminder := new(job.Reminder)
+	reminder.Run()
+
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(r.Host))
 	w.Write([]byte(r.Method))

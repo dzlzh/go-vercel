@@ -1,4 +1,4 @@
-package handler
+package job
 
 import (
 	"encoding/json"
@@ -11,6 +11,8 @@ import (
 	"github.com/golang-module/carbon/v2"
 )
 
+type Reminder struct {}
+
 type birthday struct {
 	Name string
 	Desc string
@@ -19,8 +21,8 @@ type birthday struct {
 	Lunar bool
 }
 
-func RunBirthday() {
-	res := getConfig()
+func (r *Reminder) Run() {
+	res := r.getConfig()
 	var b []birthday
 	err := json.Unmarshal(res, &b)
 	if err != nil {
@@ -38,7 +40,7 @@ func RunBirthday() {
 
 	for _, v := range b {
 		if v.Lunar {
-			if v.Month == currentTimeLunar.Month() && v.Day == 30 && !is30Days(currentTimeLunar.Year(), v.Month) {
+			if v.Month == currentTimeLunar.Month() && v.Day == 30 && !r.is30Days(currentTimeLunar.Year(), v.Month) {
 				v.Day = 29
 				fmt.Println(v.Name)
 			}
@@ -64,11 +66,10 @@ func RunBirthday() {
 		}
 	}
 	fmt.Println(message.String())
-
-	sendNotify("生日提醒", message.String())
+	r.sendNotify("生日提醒", message.String())
 }
 
-func getConfig() []byte {
+func (r *Reminder) getConfig() []byte {
 	url := os.Getenv("EDGE_CONFIG_URL")
 	token := os.Getenv("EDGE_CONFIG_TOKEN")
 	request := httpc.NewRequest(httpc.NewClient())
@@ -83,7 +84,7 @@ func getConfig() []byte {
 	return res
 }
 
-func sendNotify(subject, message string) {
+func (r *Reminder) sendNotify(subject, message string) {
 	n := notify.New()
 	corpid := os.Getenv("WXW_WC_CORPID")
 	agentid := os.Getenv("WXW_WC_AGENTID")
@@ -94,7 +95,7 @@ func sendNotify(subject, message string) {
 	n.Send(subject, message)
 }
 
-func is30Days(year, month int) bool {
+func (r *Reminder) is30Days(year, month int) bool {
 	return carbon.CreateFromLunar(year, month, 29, 0, 0, 0, false).
 		AddDay().Lunar().Day() == 30
 }

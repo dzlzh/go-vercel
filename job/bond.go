@@ -1,4 +1,4 @@
-package handler
+package job
 
 import (
 	"fmt"
@@ -11,7 +11,9 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-func RunBond() {
+type Bond struct {}
+
+func (b *Bond) Run() {
 	request := httpc.NewRequest(httpc.NewClient())
 	request.SetMethod("GET").SetURL("https://datacenter-web.eastmoney.com/api/data/v1/get")
 	request.SetQuery("source", "WEB")
@@ -72,5 +74,5 @@ func RunBond() {
 	message.WriteString("\n")
 	message.WriteString(listing)
 	n.Send("新债", message.String())
-	fmt.Println("获取数据失败")
+	fmt.Println(message.String())
 }
