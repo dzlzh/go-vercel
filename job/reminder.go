@@ -77,7 +77,6 @@ func (r *Reminder) getConfig() []byte {
 	request.SetQuery("token", token)
 	request.Send()
 	_, res, err := request.End()
-	fmt.Println(string(res))
 	if err != nil {
 		fmt.Println("获取数据失败")
 	}
